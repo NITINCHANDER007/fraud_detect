@@ -1,0 +1,2 @@
+# Placeholder to maintain data/raw/ directory in version control.
+# Raw datasets are automatically fetched by src/data_loader.py.

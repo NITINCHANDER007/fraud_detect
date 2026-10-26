@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transaction Risk Scoring System | Real-Time Fraud Detection Engine</title>
+  <meta name="description" content="Production-grade real-time fraud risk scoring API powered by XGBoost, FastAPI, and MLflow with sub-3ms latency.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <header class="navbar">
+    <div class="nav-brand">
+      <div class="brand-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="brand-title">AegisGuard Risk Engine</h1>
+        <span class="brand-subtitle">Real-Time Payment Fraud Scoring System</span>
+      </div>
+    </div>
+
+    <div class="nav-badges">
+      <div class="pill-badge status-online">
+        <span class="pulse-dot"></span>
+        <span id="api-status">API Ready • XGBoost</span>
+      </div>
+      <a href="/docs" target="_blank" class="nav-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+        Swagger OpenAPI Docs
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Hero Performance Metrics Strip -->
+    <section class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">Model Architecture</div>
+        <div class="metric-value highlight" id="model-arch">XGBoost Tuned</div>
+        <div class="metric-meta">vs. Logistic Regression Baseline</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">PR-AUC (Avg Precision)</div>
+        <div class="metric-value text-emerald" id="metric-prauc">0.8424</div>
+        <div class="metric-meta text-emerald-light">+5.22% over baseline (0.7902)</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Inference Latency</div>
+        <div class="metric-value text-cyan" id="metric-latency">&lt; 3.0 ms</div>
+        <div class="metric-meta">Real-time authorization SLA</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Fraud Precision @ Test</div>
+        <div class="metric-value text-purple" id="metric-prec">93.44%</div>
+        <div class="metric-meta">Only 4 FP out of 42,648 legit tx</div>
+      </div>
+    </section>
+
+    <!-- Main Workspace: Simulator & Real-Time Scoring -->
+    <section class="scoring-layout">
+      <!-- Left Column: Transaction Input & Presets -->
+      <div class="card glass-card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="5" width="20" height="14" rx="2"/>
+              <line x1="2" y1="10" x2="22" y2="10"/>
+            </svg>
+            Live Transaction Inspector
+          </div>
+          <span class="card-hint">Select a real transaction scenario</span>
+        </div>
+
+        <div class="preset-buttons">
+          <button type="button" class="preset-btn active" data-preset="legit-coffee">
+            <span class="preset-icon legit">☕</span>
+            <div class="preset-text">
+              <strong>Coffee ($14.50)</strong>
+              <span>Verified Legitimate</span>
+            </div>
+          </button>
+          <button type="button" class="preset-btn" data-preset="legit-high">
+            <span class="preset-icon legit">💻</span>
+            <div class="preset-text">
+              <strong>Electronics ($849.00)</strong>
+              <span>High-Value Legit</span>
+            </div>
+          </button>
+          <button type="button" class="preset-btn" data-preset="fraud-bot">
+            <span class="preset-icon fraud">🤖</span>
+            <div class="preset-text">
+              <strong>Card Testing ($1.00)</strong>
+              <span>Automated Bot Fraud</span>
+            </div>
+          </button>
+          <button type="button" class="preset-btn" data-preset="fraud-ato">
+            <span class="preset-icon fraud">🚨</span>
+            <div class="preset-text">
+              <strong>Account Takeover ($1,289.50)</strong>
+              <span>Compromised Credentials</span>
+            </div>
+          </button>
+        </div>
+
+        <form id="score-form" class="transaction-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="tx_id">Transaction ID</label>
+              <input type="text" id="tx_id" value="tx_live_7294" class="form-input" readonly>
+            </div>
+            <div class="form-group">
+              <label for="amount">Amount ($ USD)</label>
+              <input type="number" id="amount" step="0.01" min="0" value="14.50" class="form-input">
+            </div>
+          </div>
+
+          <div class="key-features-heading">
+            <span>Primary Predictive PCA Features</span>
+            <span class="badge-subtle">Top tree split gain factors</span>
+          </div>
+
+          <div class="features-grid">
+            <div class="feature-input-group">
+              <label for="v14">V14 (Anomalous Velocity)</label>
+              <input type="number" step="0.001" id="v14" value="0.150" class="form-input mono">
+            </div>
+            <div class="feature-input-group">
+              <label for="v10">V10 (Device Token)</label>
+              <input type="number" step="0.001" id="v10" value="-0.250" class="form-input mono">
+            </div>
+            <div class="feature-input-group">
+              <label for="v17">V17 (Geo Mismatch)</label>
+              <input type="number" step="0.001" id="v17" value="-0.150" class="form-input mono">
+            </div>
+            <div class="feature-input-group">
+              <label for="v12">V12 (Account Age / Limit)</label>
+              <input type="number" step="0.001" id="v12" value="-0.050" class="form-input mono">
+            </div>
+            <div class="feature-input-group">
+              <label for="v4">V4 (Burst Rate Frequency)</label>
+              <input type="number" step="0.001" id="v4" value="-0.320" class="form-input mono">
+            </div>
+            <div class="feature-input-group">
+              <label for="v11">V11 (Cardholder Consistency)</label>
+              <input type="number" step="0.001" id="v11" value="-0.410" class="form-input mono">
+            </div>
+          </div>
+
+          <details class="advanced-features-drawer">
+            <summary>View & Customize Remaining PCA Features (V1–V28)</summary>
+            <div class="all-features-grid" id="remaining-features">
+              <!-- Dynamically populated -->
+            </div>
+          </details>
+
+          <div class="form-actions">
+            <button type="submit" id="btn-score" class="btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+              Score Transaction in Real-Time
+            </button>
+            <button type="button" id="btn-batch-demo" class="btn-secondary">
+              ⚡ Run 50-Tx Batch Benchmark
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Right Column: Real-Time Risk Score & Decision Output -->
+      <div class="card glass-card result-panel">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+            Risk Assessment Decision
+          </div>
+          <span class="latency-tag" id="live-latency">Latency: -- ms</span>
+        </div>
+
+        <div class="decision-display">
+          <!-- Circular Risk Gauge -->
+          <div class="gauge-container">
+            <svg class="gauge-svg" viewBox="0 0 160 160">
+              <circle class="gauge-bg" cx="80" cy="80" r="65"></circle>
+              <circle class="gauge-fill" id="gauge-fill" cx="80" cy="80" r="65"></circle>
+            </svg>
+            <div class="gauge-content">
+              <span class="gauge-percent" id="gauge-score">0.0%</span>
+              <span class="gauge-caption">Fraud Probability</span>
+            </div>
+          </div>
+
+          <div class="decision-badge" id="decision-badge">
+            <span class="decision-icon" id="decision-icon">✓</span>
+            <span class="decision-text" id="decision-text">APPROVE</span>
+          </div>
+
+          <div class="decision-meta-row">
+            <div class="meta-item">
+              <span class="meta-label">Risk Tier</span>
+              <span class="meta-val" id="meta-tier">LOW</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Decision Threshold</span>
+              <span class="meta-val" id="meta-threshold">0.7466</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Recommendation</span>
+              <span class="meta-val" id="meta-action">Immediate Authorization</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Contributing Risk Factors -->
+        <div class="factors-section">
+          <h3 class="factors-title">Top Discriminative Risk Contributors</h3>
+          <div id="risk-factors-list" class="factors-list">
+            <div class="factor-placeholder">Score a transaction to view feature attribution</div>
+          </div>
+        </div>
+
+        <!-- Threshold Slider Interactivity -->
+        <div class="threshold-simulator">
+          <div class="threshold-header">
+            <span>Operating Decision Threshold</span>
+            <strong id="slider-threshold-val">0.7466</strong>
+          </div>
+          <input type="range" id="threshold-slider" min="0.05" max="0.95" step="0.01" value="0.75" class="slider">
+          <div class="threshold-ticks">
+            <span>Aggressive (High Recall)</span>
+            <span>Optimal F1 (0.75)</span>
+            <span>Conservative (High Precision)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Batch Scoring Table / Stream Section -->
+    <section class="card glass-card batch-section" id="batch-section" style="display: none;">
+      <div class="card-header">
+        <div class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+          Vectorized Batch Scoring Stream
+        </div>
+        <div id="batch-summary-chips" class="summary-chips">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="data-table" id="batch-table">
+          <thead>
+            <tr>
+              <th>Tx ID</th>
+              <th>Amount</th>
+              <th>Risk Score</th>
+              <th>Tier</th>
+              <th>Decision</th>
+              <th>Flagged Features</th>
+            </tr>
+          </thead>
+          <tbody id="batch-table-body">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Model Comparison & MLflow Benchmark Table -->
+    <section class="card glass-card">
+      <div class="card-header">
+        <div class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 20V10"/>
+            <path d="M12 20V4"/>
+            <path d="M6 20v-6"/>
+          </svg>
+          Holdout Test Set Benchmark (MLflow Tracked Runs)
+        </div>
+        <span class="card-hint">Strict 15% Holdout Test Split (42,722 Transactions)</span>
+      </div>
+
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Model Architecture</th>
+              <th>Operating Threshold</th>
+              <th>PR-AUC (Avg Precision)</th>
+              <th>ROC-AUC</th>
+              <th>Precision</th>
+              <th>Recall</th>
+              <th>F1-Score</th>
+              <th>False Positives</th>
+              <th>Training Time</th>
+            </tr>
+          </thead>
+          <tbody id="benchmark-table-body">
+            <tr>
+              <td><strong>Logistic Regression (Baseline)</strong></td>
+              <td>1.0000</td>
+              <td>0.7902</td>
+              <td>0.9688</td>
+              <td>93.33%</td>
+              <td>75.68%</td>
+              <td>0.8358</td>
+              <td>4 / 42,648</td>
+              <td>1.2s</td>
+            </tr>
+            <tr class="highlight-row">
+              <td><strong>Tuned XGBoost (Production)</strong></td>
+              <td>0.7466</td>
+              <td><span class="text-emerald">0.8424</span></td>
+              <td>0.9606</td>
+              <td><span class="text-emerald">93.44%</span></td>
+              <td><span class="text-emerald">77.03%</span></td>
+              <td><span class="text-emerald">0.8444</span></td>
+              <td>4 / 42,648</td>
+              <td>3.8s</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div>
+        <strong>AegisGuard Risk Scoring Engine</strong> • Built with Python, Pandas, Scikit-learn, XGBoost, FastAPI & MLflow
+      </div>
+      <div class="footer-links">
+        <a href="/docs" target="_blank">OpenAPI Docs</a>
+        <a href="/health" target="_blank">Health Check</a>
+        <a href="/v1/model-info" target="_blank">Model Metadata JSON</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

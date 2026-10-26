@@ -1,0 +1,161 @@
+{
+  "model_version": "v1.0.0-xgboost-production",
+  "training_timestamp": "2026-10-26T15:51:13Z",
+  "dataset": {
+    "name": "ULB Credit Card Fraud Detection (OpenML 43627)",
+    "total_samples": 284807,
+    "train_samples": 199364,
+    "val_samples": 42721,
+    "test_samples": 42722,
+    "test_actual_frauds": 74,
+    "class_imbalance_ratio": "578.5:1"
+  },
+  "optimal_threshold": 0.7466,
+  "risk_thresholds": {
+    "low_risk_ceiling": 0.2,
+    "high_risk_floor": 0.7466
+  },
+  "features": [
+    "V1",
+    "V2",
+    "V3",
+    "V4",
+    "V5",
+    "V6",
+    "V7",
+    "V8",
+    "V9",
+    "V10",
+    "V11",
+    "V12",
+    "V13",
+    "V14",
+    "V15",
+    "V16",
+    "V17",
+    "V18",
+    "V19",
+    "V20",
+    "V21",
+    "V22",
+    "V23",
+    "V24",
+    "V25",
+    "V26",
+    "V27",
+    "V28",
+    "Amount_scaled",
+    "Log_Amount_scaled"
+  ],
+  "top_features": [
+    {
+      "feature": "V14",
+      "importance": 0.34549999237060547
+    },
+    {
+      "feature": "V10",
+      "importance": 0.1412999927997589
+    },
+    {
+      "feature": "V17",
+      "importance": 0.09099999815225601
+    },
+    {
+      "feature": "V4",
+      "importance": 0.035999998450279236
+    },
+    {
+      "feature": "V12",
+      "importance": 0.0340999998152256
+    },
+    {
+      "feature": "V7",
+      "importance": 0.025800000876188278
+    },
+    {
+      "feature": "V11",
+      "importance": 0.021400000900030136
+    },
+    {
+      "feature": "V1",
+      "importance": 0.01979999989271164
+    },
+    {
+      "feature": "V13",
+      "importance": 0.019500000402331352
+    },
+    {
+      "feature": "V16",
+      "importance": 0.01640000008046627
+    }
+  ],
+  "benchmarks": {
+    "Logistic Regression (Baseline)": {
+      "default_threshold": {
+        "threshold": 0.5,
+        "precision": 0.0657,
+        "recall": 0.8919,
+        "f1_score": 0.1223,
+        "pr_auc": 0.7902,
+        "roc_auc": 0.9688,
+        "brier_score": 0.020217,
+        "true_positives": 66,
+        "false_positives": 939,
+        "true_negatives": 41709,
+        "false_negatives": 8,
+        "false_positive_rate": 0.02202,
+        "false_negative_rate": 0.10811
+      },
+      "optimal_threshold": {
+        "threshold": 1.0,
+        "precision": 0.9333,
+        "recall": 0.7568,
+        "f1_score": 0.8358,
+        "pr_auc": 0.7902,
+        "roc_auc": 0.9688,
+        "brier_score": 0.020217,
+        "true_positives": 56,
+        "false_positives": 4,
+        "true_negatives": 42644,
+        "false_negatives": 18,
+        "false_positive_rate": 9e-05,
+        "false_negative_rate": 0.24324
+      },
+      "train_time_sec": 0.7162220478057861
+    },
+    "Tuned XGBoost": {
+      "default_threshold": {
+        "threshold": 0.5,
+        "precision": 0.9091,
+        "recall": 0.8108,
+        "f1_score": 0.8571,
+        "pr_auc": 0.8424,
+        "roc_auc": 0.9606,
+        "brier_score": 0.00042,
+        "true_positives": 60,
+        "false_positives": 6,
+        "true_negatives": 42642,
+        "false_negatives": 14,
+        "false_positive_rate": 0.00014,
+        "false_negative_rate": 0.18919
+      },
+      "optimal_threshold": {
+        "threshold": 0.7466,
+        "precision": 0.9344,
+        "recall": 0.7703,
+        "f1_score": 0.8444,
+        "pr_auc": 0.8424,
+        "roc_auc": 0.9606,
+        "brier_score": 0.00042,
+        "true_positives": 57,
+        "false_positives": 4,
+        "true_negatives": 42644,
+        "false_negatives": 17,
+        "false_positive_rate": 9e-05,
+        "false_negative_rate": 0.22973
+      },
+      "train_time_sec": 2.911349296569824,
+      "best_iteration": 170
+    }
+  }
+}

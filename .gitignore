@@ -1,0 +1,36 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache & artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Large raw datasets (downloaded automatically by src/data_loader.py)
+data/raw/*.csv
+data/raw/*.gz
+data/raw/*.parquet
+!data/raw/.gitkeep
+
+# MLflow local tracking & databases
+mlflow.db
+mlruns/
+mlflow_artifacts/
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
