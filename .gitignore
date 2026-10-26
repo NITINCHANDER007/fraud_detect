@@ -17,6 +17,9 @@ data/raw/*.gz
 data/raw/*.parquet
 !data/raw/.gitkeep
 
+# Local sub-clones
+profile_repo/
+
 # MLflow local tracking & databases
 mlflow.db
 mlruns/
